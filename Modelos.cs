@@ -8,4 +8,24 @@ namespace ClinicaTurnos
         public const int DIAS_SEMANA   = 7;
         public const int HORAS_DIA     = 10;
     }
-    
+    public struct Paciente
+    {
+        public int    Id;
+        public string Nombre;
+        public string Apellido;
+        public string Cedula;
+        public string Telefono;
+        public int    Edad;
+        public float  Peso;
+        public float  Altura;
+        public char   Genero;
+        public bool   Activo;
+
+        public double CalcularIMC()
+        {
+            if (Altura <= 0) return 0;
+            return Math.Round(Peso / (Altura * Altura), 2);
+        }
+
+        public string NombreCompleto => $"{Nombre} {Apellido}";
+    }
