@@ -29,3 +29,24 @@ namespace ClinicaTurnos
 
         public string NombreCompleto => $"{Nombre} {Apellido}";
     }
+    public struct Doctor
+    {
+        public int    Id;
+        public string Nombre;
+        public string Apellido;
+        public string Especialidad;
+        public char   Genero;
+        public bool   Activo;
+        public bool[,] HorarioDisponible;
+
+        public string NombreCompleto => $"Dr(a). {Nombre} {Apellido}";
+
+        public void InicializarHorario()
+        {
+            HorarioDisponible = new bool[Constantes.DIAS_SEMANA, Constantes.HORAS_DIA];
+            for (int d = 0; d < 5; d++)
+                for (int h = 0; h < Constantes.HORAS_DIA; h++)
+                    HorarioDisponible[d, h] = true;
+        }
+    }
+    
