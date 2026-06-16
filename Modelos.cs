@@ -49,4 +49,36 @@ namespace ClinicaTurnos
                     HorarioDisponible[d, h] = true;
         }
     }
+public struct Turno
+    {
+        public int    Id;
+        public int    IdPaciente;
+        public int    IdDoctor;
+        public int    Dia;
+        public int    HoraSlot;
+        public bool   Confirmado;
+        public bool   Atendido;
+        public string Especialidad;
+        public string Motivo;
+        public string Fecha;
+
+        public string HoraTexto  => $"{8 + HoraSlot:D2}:00";
+
+        public string DiaNombre => Dia switch
+        {
+            0 => "Lunes", 1 => "Martes", 2 => "Miercoles",
+            3 => "Jueves", 4 => "Viernes", _ => "---"
+        };
+
+        public string Estado
+        {
+            get
+            {
+                if (Atendido)   return "ATENDIDO";
+                if (Confirmado) return "CONFIRMADO";
+                return "PENDIENTE";
+            }
+        }
+    }
+}
     
