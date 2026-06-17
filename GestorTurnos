@@ -1,0 +1,32 @@
+namespace ClinicaTurnos
+{
+    public class GestorTurnos
+    {
+        private Turno[] _turnos = new Turno[Constantes.MAX_TURNOS];
+        private int _total = 0;
+        private int _siguienteId = 1;
+
+        private readonly GestorPacientes _pacientes;
+        private readonly GestorDoctores  _doctores;
+
+        public GestorTurnos(GestorPacientes gp, GestorDoctores gd)
+        {
+            _pacientes = gp;
+            _doctores  = gd;
+        }
+
+        public int Total => _total;
+
+        public bool Agendar(Turno t)
+        {
+            if (_total >= Constantes.MAX_TURNOS) { Consola.Error("Capacidad maxima alcanzada."); return false; }
+            if (_pacientes.BuscarPorId(t.IdPaciente) == null) { Consola.Error("Paciente no encontrado."); return false; }
+            if (_doctores.BuscarPorId(t.IdDoctor) == null) { Consola.Error("Doctor no encontrado."); return false; }
+            if (!_doctores.EstaDisponible(t.IdDoctor, t.Dia, t.HoraSlot)) { Consola.Error("Doctor no disponible en ese horario."); return false; }
+            t.Id = _siguienteId++;
+            t.Confirmado = false;
+            t.Atendido   = false;
+            _turnos[_total++] = t;
+            _doctores.MarcarOcupado(t.IdDoctor, t.Dia, t.HoraSlot);
+            return true;
+        }
