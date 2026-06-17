@@ -30,3 +30,32 @@ namespace ClinicaTurnos
             _doctores.MarcarOcupado(t.IdDoctor, t.Dia, t.HoraSlot);
             return true;
         }
+        public bool Cancelar(int idTurno)
+        {
+            for (int i = 0; i < _total; i++)
+            {
+                if (_turnos[i].Id == idTurno && !_turnos[i].Atendido)
+                {
+                    _doctores.LiberarSlot(_turnos[i].IdDoctor, _turnos[i].Dia, _turnos[i].HoraSlot);
+                    for (int j = i; j < _total - 1; j++)
+                        _turnos[j] = _turnos[j + 1];
+                    _total--;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool Confirmar(int idTurno)
+        {
+            for (int i = 0; i < _total; i++)
+                if (_turnos[i].Id == idTurno) { _turnos[i].Confirmado = true; return true; }
+            return false;
+        }
+
+        public bool MarcarAtendido(int idTurno)
+        {
+            for (int i = 0; i < _total; i++)
+                if (_turnos[i].Id == idTurno && _turnos[i].Confirmado) { _turnos[i].Atendido = true; return true; }
+            return false;
+        }
