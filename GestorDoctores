@@ -1,0 +1,63 @@
+namespace ClinicaTurnos
+{
+    public class GestorDoctores
+    {
+        private Doctor[] _doctores = new Doctor[Constantes.MAX_DOCTORES];
+        private int _total = 0;
+        private int _siguienteId = 1;
+        private int[,] _matrizOcupacion = new int[Constantes.DIAS_SEMANA, Constantes.HORAS_DIA];
+
+        public int Total => _total;
+
+        public bool Registrar(Doctor d)
+        {
+            if (_total >= Constantes.MAX_DOCTORES)
+            {
+                Consola.Error("Capacidad maxima de doctores alcanzada.");
+                return false;
+            }
+            d.Id = _siguienteId++;
+            d.Activo = true;
+            d.InicializarHorario();
+            _doctores[_total++] = d;
+            return true;
+        }
+
+        public Doctor? BuscarPorId(int id)
+        {
+            for (int i = 0; i < _total; i++)
+                if (_doctores[i].Id == id && _doctores[i].Activo)
+                    return _doctores[i];
+            return null;
+        }
+
+        private int IndiceDeId(int id)
+        {
+            for (int i = 0; i < _total; i++)
+                if (_doctores[i].Id == id) return i;
+            return -1;
+        }
+        public bool EstaDisponible(int idDoctor, int dia, int hora)
+        {
+            int idx = IndiceDeId(idDoctor);
+            if (idx == -1) return false;
+            return _doctores[idx].HorarioDisponible[dia, hora];
+        }
+
+        public void MarcarOcupado(int idDoctor, int dia, int hora)
+        {
+            int idx = IndiceDeId(idDoctor);
+            if (idx == -1) return;
+            _doctores[idx].HorarioDisponible[dia, hora] = false;
+            _matrizOcupacion[dia, hora]++;
+        }
+
+        public void LiberarSlot(int idDoctor, int dia, int hora)
+        {
+            int idx = IndiceDeId(idDoctor);
+            if (idx == -1) return;
+            _doctores[idx].HorarioDisponible[dia, hora] = true;
+            if (_matrizOcupacion[dia, hora] > 0)
+                _matrizOcupacion[dia, hora]--;
+        }
+        
