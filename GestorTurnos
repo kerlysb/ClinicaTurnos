@@ -59,3 +59,82 @@ namespace ClinicaTurnos
                 if (_turnos[i].Id == idTurno && _turnos[i].Confirmado) { _turnos[i].Atendido = true; return true; }
             return false;
         }
+        public void ListarTodos()
+        {
+            Consola.Titulo("TODOS LOS TURNOS");
+            ImprimirEncabezado();
+            for (int i = 0; i < _total; i++) ImprimirFila(_turnos[i]);
+            if (_total == 0) Console.WriteLine("  No hay turnos registrados.");
+            Consola.Linea();
+            Console.WriteLine($"  Total: {_total}");
+        }
+
+        public void ListarPorPaciente(int idPaciente)
+        {
+            Consola.Titulo($"TURNOS DEL PACIENTE ID {idPaciente}");
+            ImprimirEncabezado();
+            int cont = 0;
+            for (int i = 0; i < _total; i++)
+                if (_turnos[i].IdPaciente == idPaciente) { ImprimirFila(_turnos[i]); cont++; }
+            if (cont == 0) Console.WriteLine("  No hay turnos para este paciente.");
+            Consola.Linea();
+        }
+
+        public void ListarPorDoctor(int idDoctor)
+        {
+            Consola.Titulo($"TURNOS DEL DOCTOR ID {idDoctor}");
+            ImprimirEncabezado();
+            int cont = 0;
+            for (int i = 0; i < _total; i++)
+                if (_turnos[i].IdDoctor == idDoctor) { ImprimirFila(_turnos[i]); cont++; }
+            if (cont == 0) Console.WriteLine("  No hay turnos para este doctor.");
+            Consola.Linea();
+        }
+
+        public void ListarPendientes()
+        {
+            Consola.Titulo("TURNOS PENDIENTES");
+            ImprimirEncabezado();
+            int cont = 0;
+            for (int i = 0; i < _total; i++)
+                if (!_turnos[i].Atendido && !_turnos[i].Confirmado) { ImprimirFila(_turnos[i]); cont++; }
+            if (cont == 0) Console.WriteLine("  No hay turnos pendientes.");
+            Consola.Linea();
+        }
+
+        public void MostrarResumen()
+        {
+            int pendientes = 0, confirmados = 0, atendidos = 0;
+            for (int i = 0; i < _total; i++)
+            {
+                if (_turnos[i].Atendido)        atendidos++;
+                else if (_turnos[i].Confirmado) confirmados++;
+                else                            pendientes++;
+            }
+            double pct = _total > 0 ? Math.Round((double)atendidos / _total * 100, 1) : 0;
+            Consola.Titulo("RESUMEN ESTADISTICO");
+            Console.WriteLine($"  Total turnos   : {_total}");
+            Console.WriteLine($"  Pendientes     : {pendientes}");
+            Console.WriteLine($"  Confirmados    : {confirmados}");
+            Console.WriteLine($"  Atendidos      : {atendidos}");
+            Console.WriteLine($"  % Atendidos    : {pct}%");
+            Consola.Linea();
+        }
+
+        private void ImprimirEncabezado()
+        {
+            Consola.Linea();
+            Console.WriteLine($"  {"ID",-5} {"Pac",-5} {"Doc",-5} {"Dia",-12} {"Hora",-7} {"Fecha",-12} {"Estado",-12} Motivo");
+            Consola.Linea();
+        }
+
+        private void ImprimirFila(Turno t)
+        {
+            Console.ForegroundColor = t.Atendido ? ConsoleColor.Green
+                                    : t.Confirmado ? ConsoleColor.Cyan
+                                    : ConsoleColor.Yellow;
+            Console.WriteLine($"  {t.Id,-5} {t.IdPaciente,-5} {t.IdDoctor,-5} {t.DiaNombre,-12} {t.HoraTexto,-7} {t.Fecha,-12} {t.Estado,-12} {t.Motivo}");
+            Console.ResetColor();
+        }
+    }
+}
