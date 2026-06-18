@@ -104,3 +104,63 @@ namespace ClinicaTurnos
                 }
             }
         }
+        private void MenuTurnos()
+        {
+            while (true)
+            {
+                Consola.LimpiarPantalla();
+                Consola.Titulo("GESTION DE TURNOS");
+                Console.WriteLine("  1. Agendar turno");
+                Console.WriteLine("  2. Ver todos los turnos");
+                Console.WriteLine("  3. Ver turnos pendientes");
+                Console.WriteLine("  4. Confirmar turno");
+                Console.WriteLine("  5. Marcar como atendido");
+                Console.WriteLine("  6. Cancelar turno");
+                Console.WriteLine("  7. Turnos por paciente");
+                Console.WriteLine("  8. Turnos por doctor");
+                Console.WriteLine("  0. Volver");
+                Consola.Linea();
+                int op = Consola.LeerEntero("Opcion", 0, 8);
+                switch (op)
+                {
+                    case 1:
+                        if (_gestorTurnos.Agendar(CapturarTurno()))
+                            Consola.Ok("Turno agendado exitosamente.");
+                        Consola.Pausar(); break;
+                    case 2: _gestorTurnos.ListarTodos();     Consola.Pausar(); break;
+                    case 3: _gestorTurnos.ListarPendientes(); Consola.Pausar(); break;
+                    case 4:
+                        int ic = Consola.LeerEntero("ID turno a confirmar", 1);
+                        if (_gestorTurnos.Confirmar(ic)) Consola.Ok("Turno confirmado.");
+                        else Consola.Error("No se pudo confirmar.");
+                        Consola.Pausar(); break;
+                    case 5:
+                        int ia = Consola.LeerEntero("ID turno a marcar atendido", 1);
+                        if (_gestorTurnos.MarcarAtendido(ia)) Consola.Ok("Marcado como atendido.");
+                        else Consola.Error("Debe estar confirmado primero.");
+                        Consola.Pausar(); break;
+                    case 6:
+                        int ica = Consola.LeerEntero("ID turno a cancelar", 1);
+                        if (_gestorTurnos.Cancelar(ica)) Consola.Ok("Turno cancelado.");
+                        else Consola.Error("No se pudo cancelar.");
+                        Consola.Pausar(); break;
+                    case 7:
+                        int ip = Consola.LeerEntero("ID del paciente", 1);
+                        _gestorTurnos.ListarPorPaciente(ip); Consola.Pausar(); break;
+                    case 8:
+                        int id2 = Consola.LeerEntero("ID del doctor", 1);
+                        _gestorTurnos.ListarPorDoctor(id2);  Consola.Pausar(); break;
+                    case 0: return;
+                }
+            }
+        }
+
+        private void MenuReportes()
+        {
+            Consola.LimpiarPantalla();
+            _gestorTurnos.MostrarResumen();
+            _gestorDoctores.MostrarMatrizOcupacion();
+            Console.WriteLine($"  Pacientes: {_gestorPacientes.Total}  |  Doctores: {_gestorDoctores.Total}  |  Turnos: {_gestorTurnos.Total}");
+            Consola.Linea();
+            Consola.Pausar();
+        }
