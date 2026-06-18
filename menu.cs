@@ -164,3 +164,77 @@ namespace ClinicaTurnos
             Consola.Linea();
             Consola.Pausar();
         }
+        private Paciente CapturarPaciente()
+        {
+            Consola.Titulo("NUEVO PACIENTE");
+            Paciente p = new();
+            p.Nombre   = Consola.LeerTexto("Nombre");
+            p.Apellido = Consola.LeerTexto("Apellido");
+            p.Cedula   = Consola.LeerTexto("Cedula");
+            p.Telefono = Consola.LeerTexto("Telefono");
+            p.Edad     = Consola.LeerEntero("Edad", 0, 120);
+            p.Peso     = Consola.LeerFlotante("Peso en kg (ej: 70.5)", 1f, 300f);
+            p.Altura   = Consola.LeerFlotante("Altura en m (ej: 1.65)", 0.5f, 2.5f);
+            p.Genero   = Consola.LeerChar("Genero (M/F/O)", new[] { 'M', 'F', 'O' });
+            return p;
+        }
+
+        private Doctor CapturarDoctor()
+        {
+            Consola.Titulo("NUEVO DOCTOR");
+            Doctor d = new();
+            d.Nombre       = Consola.LeerTexto("Nombre");
+            d.Apellido     = Consola.LeerTexto("Apellido");
+            d.Especialidad = Consola.LeerTexto("Especialidad");
+            d.Genero       = Consola.LeerChar("Genero (M/F)", new[] { 'M', 'F' });
+            return d;
+        }
+
+        private Turno CapturarTurno()
+        {
+            Consola.Titulo("NUEVO TURNO");
+            _gestorPacientes.Listar();
+            _gestorDoctores.Listar();
+            Turno t = new();
+            t.IdPaciente   = Consola.LeerEntero("ID del paciente", 1);
+            t.IdDoctor     = Consola.LeerEntero("ID del doctor", 1);
+            Console.WriteLine("  Dias: 0=Lunes  1=Martes  2=Miercoles  3=Jueves  4=Viernes");
+            t.Dia          = Consola.LeerEntero("Dia (0-4)", 0, 4);
+            Console.WriteLine("  Horas: 0=08:00  1=09:00  2=10:00  ...  9=17:00");
+            t.HoraSlot     = Consola.LeerEntero("Hora slot (0-9)", 0, 9);
+            t.Motivo       = Consola.LeerTexto("Motivo de consulta");
+            t.Especialidad = Consola.LeerTexto("Especialidad");
+            t.Fecha        = DateTime.Now.ToString("dd/MM/yyyy");
+            return t;
+        }
+
+        private void MostrarDetallePaciente(Paciente p)
+        {
+            Consola.Titulo("DETALLE PACIENTE");
+            Console.WriteLine($"  ID       : {p.Id}");
+            Console.WriteLine($"  Nombre   : {p.NombreCompleto}");
+            Console.WriteLine($"  Cedula   : {p.Cedula}");
+            Console.WriteLine($"  Telefono : {p.Telefono}");
+            Console.WriteLine($"  Edad     : {p.Edad} anios");
+            Console.WriteLine($"  Peso     : {p.Peso:F1} kg");
+            Console.WriteLine($"  Altura   : {p.Altura:F2} m");
+            Console.WriteLine($"  IMC      : {p.CalcularIMC():F2}");
+            Console.WriteLine($"  Genero   : {p.Genero}");
+        }
+
+        private void CargarDatos()
+        {
+            _gestorDoctores.Registrar(new Doctor { Nombre = "Ana",    Apellido = "Torres",  Especialidad = "Medicina General", Genero = 'F' });
+            _gestorDoctores.Registrar(new Doctor { Nombre = "Carlos", Apellido = "Mendoza", Especialidad = "Pediatria",        Genero = 'M' });
+            _gestorDoctores.Registrar(new Doctor { Nombre = "Sofia",  Apellido = "Rios",    Especialidad = "Cardiologia",      Genero = 'F' });
+
+            _gestorPacientes.Registrar(new Paciente { Nombre = "Luis",  Apellido = "Garcia",   Cedula = "0912345678", Telefono = "0991111111", Edad = 35, Peso = 75.5f, Altura = 1.72f, Genero = 'M' });
+            _gestorPacientes.Registrar(new Paciente { Nombre = "Maria", Apellido = "Lopez",    Cedula = "0923456789", Telefono = "0992222222", Edad = 28, Peso = 60.0f, Altura = 1.60f, Genero = 'F' });
+            _gestorPacientes.Registrar(new Paciente { Nombre = "Pedro", Apellido = "Alvarado", Cedula = "0934567890", Telefono = "0993333333", Edad = 52, Peso = 88.2f, Altura = 1.78f, Genero = 'M' });
+
+            _gestorTurnos.Agendar(new Turno { IdPaciente = 1, IdDoctor = 1, Dia = 0, HoraSlot = 0, Motivo = "Chequeo general",    Especialidad = "Medicina General", Fecha = "16/06/2025" });
+            _gestorTurnos.Agendar(new Turno { IdPaciente = 2, IdDoctor = 2, Dia = 1, HoraSlot = 2, Motivo = "Control pediatrico", Especialidad = "Pediatria",        Fecha = "17/06/2025" });
+            _gestorTurnos.Confirmar(1);
+        }
+    }
+}
