@@ -39,3 +39,40 @@ namespace ClinicaTurnos
                 }
             }
         }
+         private void MenuPacientes()
+        {
+            while (true)
+            {
+                Consola.LimpiarPantalla();
+                Consola.Titulo("GESTION DE PACIENTES");
+                Console.WriteLine("  1. Registrar nuevo paciente");
+                Console.WriteLine("  2. Listar pacientes");
+                Console.WriteLine("  3. Buscar por cedula");
+                Console.WriteLine("  4. Eliminar paciente");
+                Console.WriteLine("  0. Volver");
+                Consola.Linea();
+                int op = Consola.LeerEntero("Opcion", 0, 4);
+                switch (op)
+                {
+                    case 1:
+                        if (_gestorPacientes.Registrar(CapturarPaciente()))
+                            Consola.Ok("Paciente registrado exitosamente.");
+                        Consola.Pausar(); break;
+                    case 2:
+                        _gestorPacientes.Listar();
+                        Consola.Pausar(); break;
+                    case 3:
+                        string ced = Consola.LeerTexto("Cedula a buscar");
+                        var p = _gestorPacientes.BuscarPorCedula(ced);
+                        if (p != null) MostrarDetallePaciente(p.Value);
+                        else Consola.Error("Paciente no encontrado.");
+                        Consola.Pausar(); break;
+                    case 4:
+                        int id = Consola.LeerEntero("ID a eliminar", 1);
+                        if (_gestorPacientes.Eliminar(id)) Consola.Ok("Eliminado.");
+                        else Consola.Error("No encontrado.");
+                        Consola.Pausar(); break;
+                    case 0: return;
+                }
+            }
+        }
