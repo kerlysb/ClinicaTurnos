@@ -76,3 +76,31 @@ namespace ClinicaTurnos
                 }
             }
         }
+        private void MenuDoctores()
+        {
+            while (true)
+            {
+                Consola.LimpiarPantalla();
+                Consola.Titulo("GESTION DE DOCTORES");
+                Console.WriteLine("  1. Registrar nuevo doctor");
+                Console.WriteLine("  2. Listar doctores");
+                Console.WriteLine("  3. Ver matriz de ocupacion");
+                Console.WriteLine("  0. Volver");
+                Consola.Linea();
+                int op = Consola.LeerEntero("Opcion", 0, 3);
+                switch (op)
+                {
+                    case 1:
+                        if (_gestorDoctores.Registrar(CapturarDoctor()))
+                            Consola.Ok("Doctor registrado exitosamente.");
+                        Consola.Pausar(); break;
+                    case 2:
+                        _gestorDoctores.Listar();
+                        Consola.Pausar(); break;
+                    case 3:
+                        _gestorDoctores.MostrarMatrizOcupacion();
+                        Consola.Pausar(); break;
+                    case 0: return;
+                }
+            }
+        }
