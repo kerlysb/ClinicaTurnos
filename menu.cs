@@ -17,15 +17,15 @@ namespace ClinicaTurnos
             {
                 Consola.LimpiarPantalla();
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("  ================================================");
-                Console.WriteLine("       CLINICA SALUD TOTAL - SISTEMA DE TURNOS    ");
-                Console.WriteLine("  ================================================");
+                Console.WriteLine("  ===================================================");
+                Console.WriteLine("      CLINICA SALUD & BIENESTAR - SISTEMA DE TURNOS    ");
+                Console.WriteLine("  ===================================================");
                 Console.ResetColor();
                 Consola.Linea();
-                Console.WriteLine("  1. Gestion de Pacientes");
-                Console.WriteLine("  2. Gestion de Doctores");
-                Console.WriteLine("  3. Gestion de Turnos");
-                Console.WriteLine("  4. Reportes y Estadisticas");
+                Console.WriteLine("  1. Gestión de Pacientes");
+                Console.WriteLine("  2. Gestión de Doctores");
+                Console.WriteLine("  3. Gestión de Turnos");
+                Console.WriteLine("  4. Reportes y Estadísticas");
                 Console.WriteLine("  0. Salir");
                 Consola.Linea();
                 int op = Consola.LeerEntero("Seleccione", 0, 4);
@@ -35,7 +35,7 @@ namespace ClinicaTurnos
                     case 2: MenuDoctores();  break;
                     case 3: MenuTurnos();    break;
                     case 4: MenuReportes();  break;
-                    case 0: Console.WriteLine("\n  Hasta luego.\n"); return;
+                    case 0: Console.WriteLine("\n  Hasta luego, vuelva pronto.\n"); return;
                 }
             }
         }
